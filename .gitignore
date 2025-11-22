@@ -1,3 +1,7 @@
 node_modules/
+dist-electron
 dist-react
+dist
 .env
+.DS_Store
+.vscode/
