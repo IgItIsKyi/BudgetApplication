@@ -1,13 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
 import DTIRatio from '../components/homepage/dtiratio.tsx'
 import Bills from '../components/homepage/bills.tsx'
+import Title from '../components/title.tsx';
+import Registration  from '../components/registration.tsx';
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <Title />
+    <Registration />
     <DTIRatio />
-    <App />
   </StrictMode>,
 )
