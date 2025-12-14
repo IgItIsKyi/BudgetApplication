@@ -1,54 +1,69 @@
-import {FormEvent, useState} from "react"; 
- 
-const PasswordErrorMessage = () => { 
- return ( 
-   <p className="FieldError">Password should have at least 8 characters</p> 
- ); 
-}; 
- 
-function Registration() { 
- const [firstName, setFirstName] = useState(""); 
- const [lastName, setLastName] = useState(""); 
- const [email, setEmail] = useState(""); 
- const [password, setPassword] = useState({ 
-   value: "", 
-   isTouched: false, 
- }); 
- const [role, setRole] = useState("role"); 
+import { FormEvent, useState } from "react";
 
- const getIsFormValid = () => { 
-   return ( 
-     firstName && 
-    // validateEmail(email) && 
-     password.value.length >= 8 && 
-     role !== "role" 
-   ); 
- }; 
- 
- const clearForm = () => { 
-   setFirstName(""); 
-   setLastName(""); 
-   setEmail(""); 
-   setPassword({ 
-     value: "", 
-     isTouched: false, 
-   }); 
-   setRole("role"); 
- }; 
- 
- const handleSubmit = (e: FormEvent<HTMLFormElement>) => { 
-   e.preventDefault(); 
-   alert("Account created!");
- }
+function PasswordErrorMessage() {
+  return (
+    <p className="FieldError">Password should have at least 8 characters</p>
+  );
+};
 
- 
-    return ( 
-        <form className="Form" onSubmit={handleSubmit}> 
-                <h2 className="FormTitle">Create an account</h2>
-                <input type="text" className="Name" placeholder="Name" />
-                <input type="number" className="PIN" placeholder="pin"/>
-        </form>
-    );
+function Registration() {
+  const [userName, setUserName] = useState("");
+  const [password, setPassword] = useState({
+    value: "",
+    isTouched: false,
+  });
+  const [role, setRole] = useState("role");
+
+  function getIsFormValid(): boolean {
+    console.log("First Name: " + userName)
+    console.log("Password: " + password)
+    return userName !== "" && password.value.length >= 8;
+  }
+
+  const clearForm = () => {
+    setUserName("");
+    setPassword({
+      value: "",
+      isTouched: false,
+    });
+    setRole("role");
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let isValid: boolean = getIsFormValid();
+    console.log("Is Valid: " + isValid)
+    if(isValid === true) {
+      alert("Account created!");
+      clearForm()
+    } else {
+      alert("Account not created ... Nigga")
+      PasswordErrorMessage()
+      clearForm()
+    }
+    
+  };
+
+  return (
+    <form className="Form" onSubmit={handleSubmit}>
+      <h2 className="FormTitle">Create an account</h2>
+      <input
+        value={userName}
+        onChange= {(e) => setUserName(e.target.value)}      
+      />
+
+      <input 
+        value={password.value}
+        onChange={(e) => setPassword(prev => ({
+          value: e.target.value,
+          isTouched: true,
+        }))
+        }
+      
+      />
+      <button type="submit">Login</button>
+    </form>
+  );
 }
 
 export default Registration;
