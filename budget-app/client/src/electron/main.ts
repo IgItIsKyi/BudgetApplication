@@ -1,12 +1,5 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'path';
-import { isDev } from './util.js';
+import path from "path";
+import dotenv from "dotenv";
 
-app.on("ready", () => {
-    const mainWindow = new BrowserWindow({});
-    if (isDev()) {
-        mainWindow.loadURL('http://localhost:5123');
-    } else {
-        mainWindow.loadFile(path.join(app.getAppPath() + '/dist-react/index.html'));
-    }
-});
+// Load .env from project root (adjust path if needed)
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
