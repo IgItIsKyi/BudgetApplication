@@ -10,6 +10,13 @@ export const pool = new Pool({
   database: process.env.PGDATABASE || "postgres",
 });
 
+
+export async function getUsers() {
+  const { rows } = await pool.query("SELECT * FROM users");
+  return rows;
+}
+
+
 // Optional: handle pool errors globally
 pool.on("error", (err) => {
   console.error("Unexpected error on idle PostgreSQL client", err);

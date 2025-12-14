@@ -1,5 +1,20 @@
+// client/src/api/users.ts
 export async function getUsers() {
-  const res = await fetch("http://localhost:3000/users");
-  if (!res.ok) throw new Error("Failed to fetch users");
-  return res.json();
+  try {
+    return await window.api.getUsers();
+  } catch (err) {
+    console.error("Failed to fetch users:", err);
+    return [];
+  }
 }
+
+export async function getUserById(id: number) {
+  try {
+    return await window.api.getUserById(id);
+  } catch (err) {
+    console.error("Failed to fetch user:", err);
+    return null;
+  }
+}
+
+
