@@ -1,18 +1,9 @@
-export type Bill = {
-    id: string;
-    name: string;
-    amount: number;
-    dueDate?: Date;
-    category?: "need" | "want" | "savings";
+const bills: { billName: string, dateDue: string } = {
+    billName: "Bill Name",
+    dateDue: "10-2-2025"
 };
 
-type Billsprops = {
-    bills: Bill[];  
-    onCreateBill: () => void;
-    onDeleteBill: (id: string) => void;
-};
-
-function Bills({ bills, onCreateBill, onDeleteBill }: Billsprops) {
+function Bills() {
     
     return (
         <>
