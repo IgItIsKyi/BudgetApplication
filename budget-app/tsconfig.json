@@ -1,6 +1,6 @@
 {
   "files": [],
-  "exclude": ["src/electron"],
+  "exclude": ["client/src/electron"],
   "references": [
     { "path": "./tsconfig.node.json" },
   ]
