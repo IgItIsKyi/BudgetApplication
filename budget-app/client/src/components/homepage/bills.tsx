@@ -1,15 +1,30 @@
-const bills: { billName: string, dateDue: string } = {
-    billName: "Bill Name",
-    dateDue: "10-2-2025"
-};
+import { Chart } from "react-google-charts";
+import '../homepage/homepage.css';
+
+class Bill {
+    name: string;
+    amount: number;
+    date: string;
+    category: string;
+
+    constructor(name: string, amount: number, date: string, category: string) {
+        this.name = name;
+        this.amount = amount;
+        this.date = date;
+        this.category = category;
+    }
+
+}
 
 function Bills() {
-    
+
     return (
         <>
-            <h2>Bills</h2>    
+            <p>Categories</p>
+            <button>Add</button>
+            <button>Delete</button>
         </>
-    )
+    );
 };
 
 export default Bills
