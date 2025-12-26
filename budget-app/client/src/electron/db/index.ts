@@ -1,4 +1,3 @@
-// electron/db/index.ts
 import { Pool } from "pg";
 
 // Create a single pool instance for the app to reuse
@@ -12,10 +11,11 @@ export const pool = new Pool({
 
 
 export async function getUsers() {
-  const { rows } = await pool.query("SELECT * FROM users");
+  const { rows } = await pool.query("SELECT name FROM users");
   return rows;
 }
 
+getUsers().then(users => console.log(users)).catch(console.error);
 
 // Optional: handle pool errors globally
 pool.on("error", (err) => {

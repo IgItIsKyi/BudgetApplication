@@ -1,7 +1,7 @@
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
 import dotenv from "dotenv";
-import { pool } from "./db/index.js"; // your Postgres pool
+import { getUsers, pool } from "./db/index.js"; // your Postgres pool
 
 // 1️⃣ Load environment variables from project root
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
@@ -44,8 +44,7 @@ function createWindow() {
 // Example: get all users
 ipcMain.handle("users:get", async () => {
   try {
-    const { rows } = await pool.query("SELECT * FROM users");
-    return rows;
+    return getUsers();
   } catch (err) {
     console.error("Error fetching users:", err);
     throw err; // will propagate to renderer

@@ -1,0 +1,14 @@
+ALL THE SQL COMMANDS THAT WERE USED ARE CREATED HERE:
+
+Create users Table:
+CREATE TABLE users (
+	id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	name varchar(50) NOT NULL,
+	password varchar(50) NOT NULL
+)
+
+Add to users Table
+
+ex:
+INSERT INTO users(name, password) VALUES ('Matthew', 'KyiemIsKing')
+INSERT INTO users(name, password) VALUES ('Kyiem', 'BigDaddy')
