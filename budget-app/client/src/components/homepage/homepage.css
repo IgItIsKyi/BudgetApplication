@@ -1,0 +1,111 @@
+.viewSection {
+    background-color: black;
+    color: white;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.viewTitle {
+    padding-top: 20px;
+    text-align: center;
+}
+
+ul {
+    margin-top: 20px;
+}
+
+.addBill {
+    position: relative;
+    left: 95%;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+}
+
+.addBill:hover {
+    background-color: white;
+    border: 2px solid black;
+    color: black;
+}
+
+
+.bills {
+    display: flex;
+    padding: 15px;
+    margin: 10px;
+    border: 2px solid rgb(36, 36, 36);
+    position: relative;
+}
+
+.billDate {
+    position: absolute;
+    padding-left: 30vh;
+    font-size: 80%;
+}
+
+.NeedCategory {
+    position: relative;
+    margin-left: 5%;
+    margin-top: 20%;
+    font-size: 80%;
+    color: green;
+}
+
+.WantCategory {
+    position: relative;
+    margin-left: 5%;
+    margin-top: 20%;
+    font-size: 80%;
+    color: blue;
+}
+
+.bills button {
+    position: absolute;
+    top: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 1;
+}
+
+.bills:hover button {
+    opacity: 1;
+}
+
+.editBtn {
+    left: calc(50% - 30px);
+    transform: translateY(-50%);
+}
+
+.editBtn:hover {
+    background: #007bff;
+    border-color: #007bff;
+}
+
+.deleteBtn {
+    left: calc(50% + 30px);
+    transform: translateY(-50%);
+}
+
+.deleteBtn:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+.bills:hover {
+    border: 2px solid white;
+}
+
+.billAmount {
+    margin-left: auto;
+    padding-right: 15px;
+    color: rgb(255, 130, 130);
+}

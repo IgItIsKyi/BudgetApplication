@@ -1,6 +1,5 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import DTIRatio from '../components/homepage/dtiratio.tsx'
 import Title from '../components/title.tsx';
 import Registration  from '../components/Launchpage/registration.tsx';
 import Bills from '../components/homepage/bills.tsx'
@@ -11,6 +10,5 @@ createRoot(document.getElementById('root')!).render(
     <Title />
     <Bills />
     <Registration />
-    <DTIRatio />
   </StrictMode>,
 )
