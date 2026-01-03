@@ -7,11 +7,14 @@
 
         "module": "nodenext",
 
+        "rootDir": ".",
+
         "outDir": "../../dist-electron",
 
         "skipLibCheck": true,
 
         "typeRoots": ["./node_modules/@types", "./src/types"]
         
-    }
+    },
+    "include": ["**/*.ts"] 
 }

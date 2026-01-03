@@ -9,10 +9,15 @@ export default function Users() {
   }, []);
 
   return (
-    <ul>
-      {users.map((u: any) => (
-        <li key={u.id}>{u.name}</li>
-      ))}
-    </ul>
+    <div>
+      <h2>Users</h2>
+
+      <ul>
+        {users.map((u: any) => (
+          <li key={u.id}>{u.name}</li>
+        ))}
+      </ul>      
+    </div>
+
   );
 }

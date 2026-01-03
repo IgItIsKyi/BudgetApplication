@@ -1,11 +1,10 @@
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
 import dotenv from "dotenv";
-import { getUsers, pool } from "./db/index.js"; // your Postgres pool
-
 // 1️⃣ Load environment variables from project root
 dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
+import { getUsers, pool } from "./db/users.js"; // your Postgres pool
 // 2️⃣ Optional: verify DB connection on startup
 async function testDbConnection() {
   try {

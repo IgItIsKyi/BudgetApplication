@@ -1,5 +1,10 @@
 import { Pool } from "pg";
 
+
+console.log("PGPORT from env:", process.env.PGPORT);
+console.log("Number(PGPORT):", Number(process.env.PGPORT));
+
+
 // Create a single pool instance for the app to reuse
 export const pool = new Pool({
   host: process.env.PGHOST || "localhost",    // Use env or fallback
@@ -15,7 +20,6 @@ export async function getUsers() {
   return rows;
 }
 
-getUsers().then(users => console.log(users)).catch(console.error);
 
 // Optional: handle pool errors globally
 pool.on("error", (err) => {
