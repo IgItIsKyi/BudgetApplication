@@ -39,6 +39,17 @@ budget.addBill("Shopping", 500, "02-14-2025", "Want");
 budget.addBill("Groceries", 400, "09-29-2025", "Need");
 budget.addBill("Gas", 80, "06-03-2025", "Need");
 
+function getDebtAmount() {
+
+    var billTotal = 0;
+
+    budget.bills.forEach(bill => {
+        billTotal = bill.amount + billTotal;
+    });
+
+    return billTotal;
+}
+
 function CreateBill({ onClose, onSubmit, initialBill }: { onClose: () => void; onSubmit: (bill: Bill) => void; initialBill?: Bill }) {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -112,4 +123,5 @@ function Bills() {
     return null;
 }
 
+export {getDebtAmount};
 export default Bills;
