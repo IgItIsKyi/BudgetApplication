@@ -7,11 +7,6 @@
     position: relative;
 }
 
-.viewTitle {
-    padding-top: 20px;
-    text-align: center;
-}
-
 ul {
     margin-top: 20px;
 }
@@ -108,4 +103,13 @@ ul {
     margin-left: auto;
     padding-right: 15px;
     color: rgb(255, 130, 130);
+}
+
+.homepageTitle {
+    text-align: center;
+} 
+
+.dtiSection {
+    padding-top: 5vh;
+    padding-left: 13vh;
 }
