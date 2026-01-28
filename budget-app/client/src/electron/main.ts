@@ -1,77 +1,82 @@
 import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
 import dotenv from "dotenv";
-// 1️⃣ Load environment variables from project root
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+import { getPool } from "./db/pool.js";
+import { usersGetAll, usersAdd } from "./db/users.js";
 
-import { getUsers, pool } from "./db/users.js"; // your Postgres pool
-// 2️⃣ Optional: verify DB connection on startup
-async function testDbConnection() {
-  try {
-    const res = await pool.query("SELECT NOW()");
-    console.log("✅ Postgres connected:", res.rows[0]);
-  } catch (err) {
-    console.error("❌ Postgres connection failed", err);
-  }
-}
+dotenv.config();
 
-// 3️⃣ Create the Electron BrowserWindow
-let mainWindow: BrowserWindow;
+let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: false,      // NEVER enable this
-      contextIsolation: true,      // Security
-      preload: path.join(__dirname, "preload.js"), // secure bridge
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.resolve(process.cwd(), "preload.cjs"),
     },
   });
 
-  // Load Vite dev server in dev or your index.html in production
-  const startURL = process.env.VITE_DEV_SERVER_URL || `file://${path.join(__dirname, "../../dist/index.html")}`;
+  const isDev = process.env.NODE_ENV === "development";
+
+  const prodIndex = path.resolve(process.cwd(), "client/dist-react/index.html");
+  const startURL = isDev
+    ? "http://localhost:5123"
+    : `file://${prodIndex}`;
+
   mainWindow.loadURL(startURL);
 
   mainWindow.on("closed", () => {
-    mainWindow = null!;
+    mainWindow = null;
   });
 }
 
-// 4️⃣ IPC handlers for SQL queries
-
-// Example: get all users
-ipcMain.handle("users:get", async () => {
+ipcMain.handle("users:getAll", async () => {
   try {
-    return getUsers();
-  } catch (err) {
-    console.error("Error fetching users:", err);
-    throw err; // will propagate to renderer
-  }
-});
-
-// Example: get user by ID
-ipcMain.handle("user:getById", async (_event, id: number) => {
-  try {
-    const { rows } = await pool.query("SELECT * FROM users WHERE id = $1", [id]);
-    return rows[0] || null;
-  } catch (err) {
-    console.error("Error fetching user:", err);
+    const res = await usersGetAll();
+    return res;
+  } catch (err: any) {
+    console.error("ERROR: IPC users:getAll failed:");
+    console.error(err);
+    if (err?.errors) console.error("Inner errors:", err.errors);
     throw err;
   }
 });
 
-// 5️⃣ App lifecycle
-app.whenReady().then(() => {
-  createWindow();
-  testDbConnection();
+ipcMain.handle("users:add", async (_event, name: string) => {
+  try {
+    const res = await usersAdd(name);
+    return res;
+  } catch (err: any) {
+    console.error("ERROR: IPC users:add failed:");
+    console.error(err);
+    if (err?.errors) console.error("Inner errors:", err.errors);
+    throw err;
+  }
+});
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });
+async function testDbConnection() {
+  try {
+    const pool = getPool();
+    const res = await pool.query("SELECT NOW()");
+    console.log("SUCCESS: Postgres connected:", res.rows[0]);
+  } catch (err) {
+    console.error("ERROR: Postgres connection failed (detailed):", err);
+    throw err;
+  }
+}
+
+app.whenReady().then(async () => {
+  createWindow();
+  try {
+    await testDbConnection();
+  } catch (err) {
+    console.error("ERROR: Postgres connection failed:", err);
+  }
 });
 
 app.on("window-all-closed", () => {
-  // On macOS, it is common to keep app running until explicitly quit
   if (process.platform !== "darwin") app.quit();
 });

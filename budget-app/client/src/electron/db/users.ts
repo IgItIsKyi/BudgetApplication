@@ -1,28 +1,16 @@
-import { Pool } from "pg";
+import { getPool } from "./pool.js";
 
-
-console.log("PGPORT from env:", process.env.PGPORT);
-console.log("Number(PGPORT):", Number(process.env.PGPORT));
-
-
-// Create a single pool instance for the app to reuse
-export const pool = new Pool({
-  host: process.env.PGHOST || "localhost",    // Use env or fallback
-  port: Number(process.env.PGPORT) || 5432,   // Ensure port is number
-  user: process.env.PGUSER || "postgres",
-  password: process.env.PGPASSWORD || "",
-  database: process.env.PGDATABASE || "postgres",
-});
-
-
-export async function getUsers() {
-  const { rows } = await pool.query("SELECT name FROM users");
+export async function usersGetAll() {
+  const pool = getPool();
+  const { rows } = await pool.query("SELECT id, name FROM users ORDER BY id DESC");
   return rows;
 }
 
-
-// Optional: handle pool errors globally
-pool.on("error", (err) => {
-  console.error("Unexpected error on idle PostgreSQL client", err);
-  process.exit(-1);
-});
+export async function usersAdd(name: string) {
+  const pool = getPool();
+  const { rows } = await pool.query(
+    "INSERT INTO users (name) VALUES ($1) RETURNING id, name",
+    [name]
+  );
+  return rows[0];
+}

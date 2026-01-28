@@ -9,7 +9,7 @@
 
         "rootDir": ".",
 
-        "outDir": "../../dist-electron",
+        "outDir": "../../../dist-electron",
 
         "skipLibCheck": true,
 
