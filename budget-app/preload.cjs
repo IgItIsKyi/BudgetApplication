@@ -1,10 +1,12 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
-console.log("✅ PRELOAD LOADED (CJS)");
-
 contextBridge.exposeInMainWorld("api", {
-  users: {
-    getAll: () => ipcRenderer.invoke("users:getAll"),
-    add: (name) => ipcRenderer.invoke("users:add", name),
+  auth: {
+    login: (email, password) =>
+      ipcRenderer.invoke("auth:login", { email, password }),
+    register: (name, email, password) =>
+      ipcRenderer.invoke("auth:register", { name, email, password }),
+    me: (token) => ipcRenderer.invoke("auth:me", token),
+    logout: (token) => ipcRenderer.invoke("auth:logout", token),
   },
 });

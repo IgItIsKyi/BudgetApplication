@@ -3,9 +3,36 @@ export {};
 declare global {
   interface Window {
     api: {
-      users: {
-        getAll: () => Promise<Array<{ id: number; name: string }>>;
-        add: (name: string) => Promise<{ id: number; name: string }>;
+      auth: {
+        login: (
+          email: string,
+          password: string,
+        ) => Promise<
+          | {
+              ok: true;
+              user: { id: number; name: string; email: string };
+              token: string;
+            }
+          | { ok: false; error: string }
+        >;
+
+        register: (
+          name: string,
+          email: string,
+          password: string,
+        ) => Promise<
+          | { ok: true; user: { id: number; name: string; email: string } }
+          | { ok: false; error: string }
+        >;
+
+        me: (
+          token: string,
+        ) => Promise<
+          | { ok: true; user: { id: number; name: string; email: string } }
+          | { ok: false; error: string }
+        >;
+
+        logout: (token: string) => Promise<{ ok: true }>;
       };
     };
   }

@@ -2,7 +2,7 @@ import path from "path";
 import { app, BrowserWindow, ipcMain } from "electron";
 import dotenv from "dotenv";
 import { getPool } from "./db/pool.js";
-import { usersGetAll, usersAdd } from "./db/users.js";
+import { authLogin, authRegister, authMe, authLogout } from "./db/auth.js";
 
 dotenv.config();
 
@@ -22,9 +22,7 @@ function createWindow() {
   const isDev = process.env.NODE_ENV === "development";
 
   const prodIndex = path.resolve(process.cwd(), "client/dist-react/index.html");
-  const startURL = isDev
-    ? "http://localhost:5123"
-    : `file://${prodIndex}`;
+  const startURL = isDev ? "http://localhost:5123" : `file://${prodIndex}`;
 
   mainWindow.loadURL(startURL);
 
@@ -33,28 +31,39 @@ function createWindow() {
   });
 }
 
-ipcMain.handle("users:getAll", async () => {
-  try {
-    const res = await usersGetAll();
-    return res;
-  } catch (err: any) {
-    console.error("ERROR: IPC users:getAll failed:");
-    console.error(err);
-    if (err?.errors) console.error("Inner errors:", err.errors);
-    throw err;
-  }
+ipcMain.handle(
+  "auth:register",
+  async (
+    _event,
+    payload: { name: string; email: string; password: string },
+  ) => {
+    try {
+      return await authRegister(payload.name, payload.email, payload.password);
+    } catch (err: any) {
+      console.error("ERROR: IPC auth:register failed:", err);
+      return { ok: false, error: "Server error." };
+    }
+  },
+);
+
+ipcMain.handle(
+  "auth:login",
+  async (_event, payload: { email: string; password: string }) => {
+    try {
+      return await authLogin(payload.email, payload.password);
+    } catch (err: any) {
+      console.error("ERROR: IPC auth:login failed:", err);
+      return { ok: false, error: "Server error." };
+    }
+  },
+);
+
+ipcMain.handle("auth:me", async (_event, token: string) => {
+  return await authMe(token);
 });
 
-ipcMain.handle("users:add", async (_event, name: string) => {
-  try {
-    const res = await usersAdd(name);
-    return res;
-  } catch (err: any) {
-    console.error("ERROR: IPC users:add failed:");
-    console.error(err);
-    if (err?.errors) console.error("Inner errors:", err.errors);
-    throw err;
-  }
+ipcMain.handle("auth:logout", async (_event, token: string) => {
+  return await authLogout(token);
 });
 
 async function testDbConnection() {
@@ -68,13 +77,18 @@ async function testDbConnection() {
   }
 }
 
+async function cleanupExpiredSessions() {
+  const pool = getPool();
+  await pool.query(`DELETE FROM sessions WHERE last_seen_at < NOW() - INTERVAL '30 minutes'`);
+}
+
 app.whenReady().then(async () => {
   createWindow();
-  try {
-    await testDbConnection();
-  } catch (err) {
-    console.error("ERROR: Postgres connection failed:", err);
-  }
+  await testDbConnection();
+
+  setInterval(() => {
+    cleanupExpiredSessions().catch(console.error);
+  }, 10 * 60 * 1000);
 });
 
 app.on("window-all-closed", () => {
